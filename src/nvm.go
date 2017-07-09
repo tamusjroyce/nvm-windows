@@ -341,8 +341,7 @@ func uninstall(version string) {
     fmt.Printf("Uninstalling node v"+version+"...")
     v, _ := node.GetCurrentVersion()
     if v == version {
-      runElevated(fmt.Sprintf(`"%s" cmd /C rmdir "%s"`,
-        filepath.Join(env.root, "elevate.cmd"),
+      runElevated(fmt.Sprintf(`cmd /C rmdir "%s"`,
         filepath.Clean(env.symlink)))
     }
     e := os.RemoveAll(filepath.Join(env.root, "v"+version))
@@ -397,16 +396,14 @@ func use(version string, cpuarch string) {
   // Remove symlink if it already exists
   sym, _ := os.Stat(env.symlink)
   if sym != nil {
-    if !runElevated(fmt.Sprintf(`"%s" cmd /C rmdir "%s"`,
-      filepath.Join(env.root, "elevate.cmd"),
+    if !runElevated(fmt.Sprintf(`cmd /C rmdir "%s"`,
       filepath.Clean(env.symlink))) {
       return
     }
   }
 
   // Create new symlink
-  if !runElevated(fmt.Sprintf(`"%s" cmd /C mklink /D "%s" "%s"`,
-    filepath.Join(env.root, "elevate.cmd"),
+  if !runElevated(fmt.Sprintf(`cmd /C mklink /J "%s" "%s"`,
     filepath.Clean(env.symlink),
     filepath.Join(env.root, "v"+version))) {
     return
@@ -560,8 +557,7 @@ func enable() {
 }
 
 func disable() {
-  if !runElevated(fmt.Sprintf(`"%s" cmd /C rmdir "%s"`,
-    filepath.Join(env.root, "elevate.cmd"),
+  if !runElevated(fmt.Sprintf(`cmd /C rmdir "%s"`,
     filepath.Clean(env.symlink))) {
     return
   }
