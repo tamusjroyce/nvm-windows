@@ -323,7 +323,7 @@ func uninstall(version string) {
 		fmt.Printf("Uninstalling node v" + version + "...")
 		v, _ := node.GetCurrentVersion()
 		if v == version {
-			cmd := exec.Command(filepath.Join(env.root, "elevate.cmd"), "cmd", "/C", "rmdir", env.symlink)
+			cmd := exec.Command("cmd", "/C", "rmdir", env.symlink)
 			cmd.Run()
 		}
 		e := os.RemoveAll(filepath.Join(env.root, "v"+version))
@@ -387,7 +387,7 @@ func use(version string, cpuarch string) {
 	// Create or update the symlink
 	sym, _ := os.Stat(env.symlink)
 	if sym != nil {
-		cmd := exec.Command(filepath.Join(env.root, "elevate.cmd"), "cmd", "/C", "rmdir", env.symlink)
+		cmd := exec.Command("cmd", "/C", "rmdir", env.symlink)
 		var output bytes.Buffer
 		var _stderr bytes.Buffer
 		cmd.Stdout = &output
@@ -399,7 +399,7 @@ func use(version string, cpuarch string) {
 		}
 	}
 
-	c := exec.Command(filepath.Join(env.root, "elevate.cmd"), "cmd", "/C", "mklink", "/D", env.symlink, filepath.Join(env.root, "v"+version))
+	c := exec.Command("cmd", "/C", "mklink", "/J", env.symlink, filepath.Join(env.root, "v"+version))
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 	c.Stdout = &out
@@ -558,7 +558,7 @@ func enable() {
 }
 
 func disable() {
-	cmd := exec.Command(filepath.Join(env.root, "elevate.cmd"), "cmd", "/C", "rmdir", env.symlink)
+	cmd := exec.Command("cmd", "/C", "rmdir", env.symlink)
 	cmd.Run()
 	fmt.Println("nvm disabled")
 }
